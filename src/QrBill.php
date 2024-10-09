@@ -88,7 +88,7 @@ final class QrBill implements SelfValidatableInterface
     public function setCreditor(AddressInterface $creditor): self
     {
         $this->creditor = $creditor;
-        
+
         return $this;
     }
 
@@ -100,7 +100,7 @@ final class QrBill implements SelfValidatableInterface
     public function setPaymentAmountInformation(PaymentAmountInformation $paymentAmountInformation): self
     {
         $this->paymentAmountInformation = $paymentAmountInformation;
-        
+
         return $this;
     }
 
@@ -112,7 +112,7 @@ final class QrBill implements SelfValidatableInterface
     public function setUltimateDebtor(AddressInterface $ultimateDebtor): self
     {
         $this->ultimateDebtor = $ultimateDebtor;
-        
+
         return $this;
     }
 
@@ -124,7 +124,7 @@ final class QrBill implements SelfValidatableInterface
     public function setPaymentReference(PaymentReference $paymentReference): self
     {
         $this->paymentReference = $paymentReference;
-        
+
         return $this;
     }
 

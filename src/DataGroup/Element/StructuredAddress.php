@@ -49,7 +49,10 @@ final class StructuredAddress extends Address implements AddressInterface, SelfV
      */
     private string $country;
 
+    private string $company;
+
     private function __construct(
+        ?string $company,
         string $name,
         ?string $street,
         ?string $buildingNumber,
@@ -57,6 +60,7 @@ final class StructuredAddress extends Address implements AddressInterface, SelfV
         string $city,
         string $country
     ) {
+        $this->company = self::normalizeString($company);
         $this->name = self::normalizeString($name);
         $this->street = self::normalizeString($street);
         $this->buildingNumber = self::normalizeString($buildingNumber);
@@ -66,12 +70,14 @@ final class StructuredAddress extends Address implements AddressInterface, SelfV
     }
 
     public static function createWithoutStreet(
+        string $company,
         string $name,
         string $postalCode,
         string $city,
         string $country
     ): self {
         return new self(
+            $company,
             $name,
             null,
             null,
@@ -82,6 +88,7 @@ final class StructuredAddress extends Address implements AddressInterface, SelfV
     }
 
     public static function createWithStreet(
+        string $company,
         string $name,
         string $street,
         ?string $buildingNumber,
@@ -90,6 +97,7 @@ final class StructuredAddress extends Address implements AddressInterface, SelfV
         string $country
     ): self {
         return new self(
+            $company,
             $name,
             $street,
             $buildingNumber,
@@ -131,20 +139,29 @@ final class StructuredAddress extends Address implements AddressInterface, SelfV
 
     public function getFullAddress(bool $forReceipt = false): string
     {
-        $lines[1] = $this->getName();
+        $index = 1;
 
-        if ($this->getStreet()) {
-            $lines[2] = $this->getStreet();
-
-            if ($this->getBuildingNumber()) {
-                $lines[2] .= ' ' . $this->getBuildingNumber();
-            }
+        if($this->getCompany()) {
+            $lines[$index] = $this->getCompany();
+            $index++;
         }
 
+        $lines[$index] = $this->getName();
+        $index++;
+
+        if ($this->getStreet()) {
+            $lines[$index] = $this->getStreet();
+
+            if ($this->getBuildingNumber()) {
+                $lines[$index] .= ' ' . $this->getBuildingNumber();
+            }
+        }
+        $index++;
+
         if ('CH' === $this->getCountry()) {
-            $lines[3] = sprintf("%s %s", $this->getPostalCode(), $this->getCity());
+            $lines[$index] = sprintf("%s %s", $this->getPostalCode(), $this->getCity());
         } else {
-            $lines[3] = sprintf("%s-%s %s", $this->getCountry(), $this->getPostalCode(), $this->getCity());
+            $lines[$index] = sprintf("%s-%s %s", $this->getCountry(), $this->getPostalCode(), $this->getCity());
         }
 
         if ($forReceipt) {
@@ -172,13 +189,13 @@ final class StructuredAddress extends Address implements AddressInterface, SelfV
         $metadata->addPropertyConstraints('name', [
             new Assert\NotBlank(),
             new Assert\Length([
-                'max' => 70
+                'max' => 200
             ])
         ]);
 
         $metadata->addPropertyConstraints('street', [
             new Assert\Length([
-                'max' => 70
+                'max' => 200
             ])
         ]);
 
@@ -206,5 +223,10 @@ final class StructuredAddress extends Address implements AddressInterface, SelfV
             new Assert\NotBlank(),
             new Assert\Country()
         ]);
+    }
+
+    public function getCompany(): ?string
+    {
+        return $this->company;
     }
 }

@@ -9,6 +9,8 @@ interface AddressInterface
 {
     public function getName(): ?string;
 
+    public function getCompany(): ?string;
+
     public function getCountry(): ?string;
 
     public function getFullAddress(bool $forReceipt = false): string;
