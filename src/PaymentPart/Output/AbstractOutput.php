@@ -108,7 +108,8 @@ abstract class AbstractOutput implements OutputInterface
 
         if ($this->qrBill->getUltimateDebtor()) {
             $informationElements[] = Title::create('text.payableBy');
-            $informationElements[] = Text::create($this->qrBill->getUltimateDebtor()->getFullAddress(true));
+            //Set false for the receipt to get the full name and address without clipping the lines
+            $informationElements[] = Text::create($this->qrBill->getUltimateDebtor()->getFullAddress(false));
         } else {
             $informationElements[] = Title::create('text.payableByName');
             $informationElements[] = Placeholder::create(Placeholder::PLACEHOLDER_TYPE_PAYABLE_BY_RECEIPT);
