@@ -130,7 +130,6 @@ class CombinedAddress extends Address implements AddressInterface, QrCodeableInt
     public function getQrCodeData(): array
     {
         return [
-            $this->getCompany(),
             $this->getAddressLine2() ? self::ADDRESS_TYPE : '',
             $this->getName(),
             $this->getAddressLine1(),
